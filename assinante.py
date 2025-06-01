@@ -52,11 +52,11 @@ def inserir_ramo(descricao):
         conn.close()
         cursor.close()
 
-def inserir_assinante(nome):
+def inserir_assinante(nome, fk_cd_tipo, fk_cd_ramo):
     conn = conectar_ao_banco()
     if conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO assinante_tbl (nome) VALUES (%s)", (nome,))
+        cursor.execute("INSERT INTO assinante_tbl (fk_cd_ramo, fk_cd_tipo, nome) VALUES (%s, %s, %s)", (fk_cd_ramo, fk_cd_tipo, nome))
         conn.commit()
         print("Assinante inserido com sucesso")
         conn.close()
@@ -109,11 +109,9 @@ def menu():
 
         if opcao == "1":
             nome = input("Nome do assinante: ")
-            descricao_ramo = input("Descrição do ramo: ")
-            descricao_tipo = input("Descrição do tipo: ")
-            inserir_ramo(descricao_ramo)
-            inserir_tipo(descricao_tipo)
-            inserir_assinante(nome)
+            fk_cd_tipo = int(input("id do tipo: "))
+            fk_cd_ramo = int(input("id do ramo: "))
+            inserir_assinante(nome, fk_cd_tipo, fk_cd_ramo)
             print("Assinante inserido com sucesso!")
 
         elif opcao == "2":

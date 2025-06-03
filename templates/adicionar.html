@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="card">
+        <h2>{% block title %}{% endblock %}</h2>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fk_cd_tipo">Tipo</label>
+                <input type="number" class="form-control" id="fk_cd_tipo" name="fk_cd_tipo" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fk_cd_ramo">Ramo</label>
+                <input type="number" class="form-control" id="fk_cd_ramo" name="fk_cd_ramo" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}

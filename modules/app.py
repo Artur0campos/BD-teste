@@ -1,8 +1,6 @@
+from data_base import (delete_assinante, inserir_assinante, listar_assinantes,
+                       obter_assinante_por_id, update_assinante)
 from flask import Flask, flash, redirect, render_template, request, url_for
-
-from modulos.data_base import (atualizar_assinante, deletar_assinante,
-                               inserir_assinante, listar_assinantes,
-                               obter_assinante_por_id)
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_aqui'
@@ -40,7 +38,7 @@ def editar(cd_assinante):
         fk_cd_ramo = request.form['fk_cd_ramo']
         
         try:
-            atualizar_assinante(cd_assinante, nome, fk_cd_tipo, fk_cd_ramo)
+            update_assinante(cd_assinante, nome, fk_cd_tipo, fk_cd_ramo)
             flash("Assinante atualizado com sucesso!", "success")
             return redirect(url_for('index'))
         except Exception as e:
@@ -59,7 +57,7 @@ def editar(cd_assinante):
 @app.route('/deletar/<int:cd_assinante>')
 def deletar(cd_assinante):
     try:
-        deletar_assinante(cd_assinante)
+        delete_assinante(cd_assinante)
         flash("Assinante deletado com sucesso!", "success")
     except Exception as e:
         flash(f"Erro ao deletar assinante: {str(e)}", "danger")

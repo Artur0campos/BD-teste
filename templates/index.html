@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="card">
+        <h2>Lista de Assinantes</h2>
+        
+        <a href="{{ url_for('adicionar') }}" class="btn btn-primary mb-3">Adicionar Assinante</a>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Ramo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assinante in assinantes %}
+                <tr>
+                    <td>{{ assinante.cd_assinante }}</td>
+                    <td>{{ assinante.nome }}</td>
+                    <td>{{ assinante.fk_cd_tipo }}</td>
+                    <td>{{ assinante.fk_cd_ramo }}</td>
+                    <td>
+                        <a href="{{ url_for('editar', cd_assinante=assinante.cd_assinante) }}" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="{{ url_for('deletar', cd_assinante=assinante.cd_assinante) }}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza?')">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -74,24 +74,31 @@ def inserir_assinante(nome, fk_cd_tipo, fk_cd_ramo):
 
 def listar_assinantes():
     conn = conectar_ao_banco()
-    if conn:
-        cursor =  conn.cursor()
+    try:
+        cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM assinante_tbl")
-        for cd_assinante,nome in cursor.fetchall:
-            print(f"CD_assinante: {cd_assinante} - Nome: {nome}")
-        cursor.close()
-        conn.close()
+        return print(cursor.fetchall())
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
 
-def update_assinante(cd_assinante, novo_nome):
+def update_assinante(cd_assinante, nome, fk_cd_tipo, fk_cd_ramo):
     conn = conectar_ao_banco()
-    if conn:
+    try:
         cursor = conn.cursor()
-        sql = "UPDATE assinantes SET nome = %s WHERE id = %s"
-        cursor.execute(sql, (novo_nome, cd_assinante))
+        cursor.execute(
+            "UPDATE assinante_tbl SET nome = %s, fk_cd_tipo = %s, fk_cd_ramo = %s WHERE cd_assinante = %s",
+            (nome, fk_cd_tipo, fk_cd_ramo, cd_assinante)
+        )
         conn.commit()
-        cursor.close()
-        conn.close()
+    except Exception as e:
+        raise Exception(f"Erro ao atualizar assinante: {e}")
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
 def delete_assinante(cd_assinante):
     conn = conectar_ao_banco()
@@ -102,6 +109,20 @@ def delete_assinante(cd_assinante):
         conn.commit()
         print("Assinante excluído com sucesso")
         cursor.close()
+
+def obter_assinante_por_id(cd_assinante):
+    conn = conectar_ao_banco()
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT * FROM assinante_tbl WHERE cd_assinante = %s",
+            (cd_assinante,)
+        )
+        return cursor.fetchone()
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
 
 
@@ -126,7 +147,7 @@ def menu():
                     print("Assinante inserido com sucesso!")
                 except Exception as e:
                     print(f"Erro ao inserir assinante: {e}")
-                    continue  # Volta para o início do loop
+                    continue 
 
             elif opcao == "2":
                 try:
@@ -139,7 +160,9 @@ def menu():
                 try:
                     id = int(input("ID do assinante a atualizar: "))
                     novo_nome = input("Novo nome: ")
-                    update_assinante(id, novo_nome)
+                    novo_tipo = int(input("Novo ID do tipo: "))
+                    novo_ramo = int(input("Novo ID do ramo: "))
+                    update_assinante(id, novo_nome, novo_tipo, novo_ramo)
                 except Exception as e:
                     print(f"Erro ao atualizar assinante: {e}")
                     continue
